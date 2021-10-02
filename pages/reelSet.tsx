@@ -1,10 +1,8 @@
 import React from "react";
-import { Box, Heading, Grid, Button } from "grommet";
-import Image from "next/image";
-import Symbol from "./symbol";
+import { Box, Grid } from "grommet";
 import Reel from "./reel";
 import ControlPanel from "./controlPanel";
-import { Constants } from "./constants";
+import Constants from "../constants/constants";
 
 interface Props {}
 

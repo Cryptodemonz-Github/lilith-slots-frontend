@@ -1,10 +1,8 @@
-import React, { PropsWithoutRef } from "react";
-import { Box, Heading, Grid, Button } from "grommet";
-import Image from "next/image";
+import React from "react";
+import { Box } from "grommet";
 import Symbol from "./symbol";
-import { type } from "os";
 import { animated, Spring } from "react-spring";
-import { Constants } from "./constants";
+import Constants from "../constants/constants";
 import * as easings from "d3-ease";
 
 interface Props {
@@ -31,7 +29,9 @@ class Reel extends React.Component<Props, States> {
     super(props);
 
     this.symbols = props.symbols;
-    this.reelSymbols = this.symbols.repeat(Constants.REELS_REPEAT).split("");
+    this.reelSymbols = [];
+    if (this.symbols)
+      this.reelSymbols = this.symbols.repeat(Constants.REELS_REPEAT).split("");
 
     this.symbolHeight = Constants.REELSET_HEIGHT / Constants.SYMBOLS + 1;
     this.symbolWidth = this.symbolHeight;
@@ -74,9 +74,6 @@ class Reel extends React.Component<Props, States> {
               easing: easings.easeExpInOut,
             }}
             onRest={() => {
-              //console.log("startPos: ", this.state.startPos);
-              //console.log("currentScrollPos: ", this.currentScrollPos);
-
               this.setState({
                 scrollPos: this.currentScrollPos,
               });

@@ -1,10 +1,9 @@
 import React from "react";
-import { Box, Heading, Grid, Button } from "grommet";
+import { Box } from "grommet";
 import Image from "next/image";
-import { Constants } from "./constants";
 
 type Props = {
-  symbol: String;
+  symbol: string;
   key: number;
   index: number;
   height: number;
@@ -25,6 +24,7 @@ class Symbol extends React.Component<Props> {
         >
           <Image
             src={
+              this.props.symbol &&
               require("../styles/assets/" + this.props.symbol + ".png").default
             }
           />

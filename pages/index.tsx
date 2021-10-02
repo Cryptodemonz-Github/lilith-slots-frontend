@@ -1,16 +1,12 @@
-import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import styles from "../styles/Home.module.css";
-import { Box, Heading, Grid, Button } from "grommet";
+import { Heading } from "grommet";
 import { Grommet } from "grommet";
 import { deepMerge } from "grommet/utils";
 import { grommet } from "grommet/themes";
-import Reel from "./reel";
-import ControlPanel from "./controlPanel";
 import ReelSet from "./reelSet";
-import customTheme from "./customTheme";
 import React from "react";
+import customTheme from "../constants/style";
 
 interface Props {}
 
