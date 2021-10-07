@@ -9,6 +9,8 @@ interface Props {
   area: string;
   index: number;
   symbols: string;
+  setSpinningIsEnded: (value: boolean) => void;
+  resetting: boolean;
 }
 
 interface States {
@@ -30,9 +32,9 @@ class Reel extends React.Component<Props, States> {
 
     this.symbols = props.symbols;
     this.reelSymbols = [];
-    if (this.symbols)
+    if (this.symbols) {
       this.reelSymbols = this.symbols.repeat(Constants.REELS_REPEAT).split("");
-
+    }
     this.symbolHeight = Constants.REELSET_HEIGHT / Constants.SYMBOLS + 1;
     this.symbolWidth = this.symbolHeight;
 
@@ -44,6 +46,8 @@ class Reel extends React.Component<Props, States> {
       scrollPos: this.currentScrollPos,
       duration: Constants.SPINNING_DURATION,
     };
+
+    this.reset = this.reset.bind(this);
   }
 
   scrollByOffset = (offSet: number) => {
@@ -54,6 +58,22 @@ class Reel extends React.Component<Props, States> {
       duration: Constants.SPINNING_DURATION + this.props.index * 1000,
     });
   };
+
+  reset() {
+    this.reelSymbols = [];
+    if (this.symbols) {
+      this.reelSymbols = this.symbols.repeat(Constants.REELS_REPEAT).split("");
+    }
+
+    this.position = this.reelSymbols.length - Constants.SYMBOLS;
+    this.currentScrollPos = (this.position * this.symbolHeight * -1) / 2;
+
+    this.setState({
+      startPos: this.currentScrollPos,
+      scrollPos: this.currentScrollPos,
+      duration: Constants.SPINNING_DURATION,
+    });
+  }
 
   render() {
     return (
@@ -69,14 +89,23 @@ class Reel extends React.Component<Props, States> {
           <Spring
             from={{ y: this.state.startPos }}
             to={{ y: this.state.scrollPos }}
-            config={{
-              duration: this.state.duration,
-              easing: easings.easeExpInOut,
-            }}
+            config={
+              !this.props.resetting
+                ? {
+                    duration: this.state.duration,
+                    easing: easings.easeExpInOut,
+                  }
+                : { duration: 1 }
+            }
             onRest={() => {
-              this.setState({
-                scrollPos: this.currentScrollPos,
-              });
+              if (!this.props.resetting) {
+                this.setState({
+                  scrollPos: this.currentScrollPos,
+                });
+                if (this.props.index === 2) {
+                  this.props.setSpinningIsEnded(true);
+                }
+              }
             }}
           >
             {(styles) => (

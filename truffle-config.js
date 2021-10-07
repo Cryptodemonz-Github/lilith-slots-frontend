@@ -17,7 +17,7 @@
  * phrase from a file you've .gitignored so it doesn't accidentally become public.
  *
  */
-
+const path = require("path");
 // const HDWalletProvider = require('@truffle/hdwallet-provider');
 // const infuraKey = "fj4jll3k.....";
 //
@@ -34,8 +34,14 @@ module.exports = {
    *
    * $ truffle test --network <network-name>
    */
-
+  contracts_build_directory: path.join(__dirname, "src/contracts"),
   networks: {
+    development: {
+      host: "127.0.0.1", // Localhost (default: none)
+      port: 9545, // Standard Ethereum port (default: none)
+      network_id: "*", // Any network (default: none)
+      websocket: true,
+    },
     // Useful for testing. The `development` name is special - truffle uses it by default
     // if it's defined here and no other network is specified at the command line.
     // You should run a client (like ganache-cli, geth or parity) in a separate terminal
@@ -82,7 +88,7 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      // version: "0.5.1",    // Fetch exact version from solc-bin (default: truffle's version)
+      version: "0.8.7", // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       // settings: {          // See the solidity docs for advice about optimization and evmVersion
       //  optimizer: {
@@ -91,7 +97,7 @@ module.exports = {
       //  },
       //  evmVersion: "byzantium"
       // }
-    }
+    },
   },
 
   // Truffle DB is currently disabled by default; to enable it, change enabled: false to enabled: true
@@ -101,6 +107,6 @@ module.exports = {
   // $ truffle migrate --reset --compile-all
 
   db: {
-    enabled: false
-  }
+    enabled: false,
+  },
 };

@@ -36,8 +36,6 @@ class Home extends React.Component<Props> {
           <main className={styles.main}>
             <Heading>DEMONZ SLOTS</Heading>
 
-            <p className={styles.description}>Connect Your Wallet!</p>
-
             <div className={styles.grid}>
               <ReelSet />
             </div>
