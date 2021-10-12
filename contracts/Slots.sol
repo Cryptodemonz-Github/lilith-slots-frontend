@@ -342,6 +342,8 @@ contract Slots is Ownable, VRFConsumerBase {
         } else {
             emit PrizeOfPlayer(requestId, 0);
         }
+
+        delete currency[player];
     }
 
     //-------------------------------------------------------------------------
