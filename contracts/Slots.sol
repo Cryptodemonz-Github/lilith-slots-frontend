@@ -55,7 +55,10 @@ contract Slots is Ownable, VRFConsumerBase {
     Multiplier public multiplier;
 
     // fixed amount of $LLTH tokens that a player can place as bet for a spin
-    uint256 public betAmount = 10 * 10**18;
+    uint256 public betLLTH = 10 * 10**18;
+
+    // fixed amount of ETH that a player can place as bet for a spin
+    uint256 public betETH = 0.1 ether;
 
     // fee required to fulfill a VRF request
     uint256 public fee;
@@ -90,8 +93,8 @@ contract Slots is Ownable, VRFConsumerBase {
     // mapping of requestId to the returned random number
     mapping(bytes32 => uint256[]) public requestIdToRandomNumbers;
 
-    // for testing
-    mapping(bytes32 => uint256) public randomNumberMap;
+    // mapping to find the currency of players used for betting
+    mapping(address => string) public currency;
 
     // sending random numbers for front-end
     event RandomsAreArrived(bytes32 requestId, uint256[] randomNumbers);
@@ -215,6 +218,7 @@ contract Slots is Ownable, VRFConsumerBase {
             requestIdToAddress[requestId] != address(0),
             "Player cannot be null address."
         );
+        address player = requestIdToAddress[requestId];
 
         // 6-6-6
         // --> Pays: 20x
@@ -223,15 +227,24 @@ contract Slots is Ownable, VRFConsumerBase {
             results[requestId].center == 6 &&
             results[requestId].right == 6
         ) {
-            _LLTH.transfer(
-                requestIdToAddress[requestId],
-                bets[requestIdToAddress[requestId]].mul(multiplier.first)
-            );
+            if (currency[player] == "ETH") {
+                _LLTH.transfer(player, bets[player].mul(multiplier.first));
 
-            emit PrizeOfPlayer(
-                requestId,
-                bets[requestIdToAddress[requestId]].mul(multiplier.first)
-            );
+                emit PrizeOfPlayer(
+                    requestId,
+                    bets[player].mul(multiplier.first)
+                );
+            } else {
+                _LLTH.transfer(
+                    player,
+                    bets[player].mul(multiplier.first).mul(15).div(10)
+                );
+
+                emit PrizeOfPlayer(
+                    requestId,
+                    bets[player].mul(multiplier.first).mul(15).div(10)
+                );
+            }
         }
         // 5-5-5, 4-4-4, 3-3-3, 2-2-2, 1-1-1
         // --> Pays: 5x
@@ -240,15 +253,24 @@ contract Slots is Ownable, VRFConsumerBase {
             results[requestId].left == results[requestId].right &&
             results[requestId].left != 6
         ) {
-            _LLTH.transfer(
-                requestIdToAddress[requestId],
-                bets[requestIdToAddress[requestId]].mul(multiplier.second)
-            );
+            if (currency[player] == "ETH") {
+                _LLTH.transfer(player, bets[player].mul(multiplier.second));
 
-            emit PrizeOfPlayer(
-                requestId,
-                bets[requestIdToAddress[requestId]].mul(multiplier.second)
-            );
+                emit PrizeOfPlayer(
+                    requestId,
+                    bets[player].mul(multiplier.second)
+                );
+            } else {
+                _LLTH.transfer(
+                    player,
+                    bets[player].mul(multiplier.second).mul(15).div(10)
+                );
+
+                emit PrizeOfPlayer(
+                    requestId,
+                    bets[player].mul(multiplier.second).mul(15).div(10)
+                );
+            }
         }
         // 6-6-x, 6-x-6, x-6-6
         // --> Pays: 4x
@@ -265,15 +287,24 @@ contract Slots is Ownable, VRFConsumerBase {
                 results[requestId].center == 6 &&
                 results[requestId].right == 6)
         ) {
-            _LLTH.transfer(
-                requestIdToAddress[requestId],
-                bets[requestIdToAddress[requestId]].mul(multiplier.third)
-            );
+            if (currency[player] == "ETH") {
+                _LLTH.transfer(player, bets[player].mul(multiplier.third));
 
-            emit PrizeOfPlayer(
-                requestId,
-                bets[requestIdToAddress[requestId]].mul(multiplier.third)
-            );
+                emit PrizeOfPlayer(
+                    requestId,
+                    bets[player].mul(multiplier.third)
+                );
+            } else {
+                _LLTH.transfer(
+                    player,
+                    bets[player].mul(multiplier.third).mul(15).div(10)
+                );
+
+                emit PrizeOfPlayer(
+                    requestId,
+                    bets[player].mul(multiplier.third).mul(15).div(10)
+                );
+            }
         }
         // 6-x-x, x-6-x, x-x-6
         // --> Pays: 1x
@@ -290,15 +321,24 @@ contract Slots is Ownable, VRFConsumerBase {
                 results[requestId].center != 6 &&
                 results[requestId].right == 6)
         ) {
-            _LLTH.transfer(
-                requestIdToAddress[requestId],
-                bets[requestIdToAddress[requestId]].mul(multiplier.fourth)
-            );
+            if (currency[player] == "ETH") {
+                _LLTH.transfer(player, bets[player].mul(multiplier.fourth));
 
-            emit PrizeOfPlayer(
-                requestId,
-                bets[requestIdToAddress[requestId]].mul(multiplier.fourth)
-            );
+                emit PrizeOfPlayer(
+                    requestId,
+                    bets[player].mul(multiplier.fourth)
+                );
+            } else {
+                _LLTH.transfer(
+                    player,
+                    bets[player].mul(multiplier.fourth).mul(15).div(10)
+                );
+
+                emit PrizeOfPlayer(
+                    requestId,
+                    bets[player].mul(multiplier.fourth).mul(15).div(10)
+                );
+            }
         } else {
             emit PrizeOfPlayer(requestId, 0);
         }
@@ -308,15 +348,29 @@ contract Slots is Ownable, VRFConsumerBase {
     // EXTERNAL FUNCTIONS
     //-------------------------------------------------------------------------
 
-    function placeBet() external {
-        _LLTH.transferFrom(msg.sender, address(this), betAmount);
-        bets[msg.sender] = betAmount;
+    function placeBetInLLTH() external {
+        _LLTH.transferFrom(msg.sender, address(this), betLLTH);
+        bets[msg.sender] = betLLTH;
+        currency[msg.sender] = "LLTH";
         getRandomNumber(msg.sender);
     }
 
-    function withdraw(uint256 amount) external onlyOwner {
+    function placeBetInETH() external {
+        require(msg.value == bet, "Incorrect amount of ETH sent.");
+
+        bets[msg.sender] = betETH;
+        currency[msg.sender] = "ETH";
+        getRandomNumber(msg.sender);
+    }
+
+    function withdrawLLTH(uint256 amount) external onlyOwner {
         require(_LLTH.balanceOf(address(this)) >= amount);
 
         _LLTH.transfer(owner(), amount);
+    }
+
+    function withdrawETH(uint256 amount) external onlyOwner {
+        require(amount <= address(this).balance, "Not enough ETH.");
+        payable(msg.sender).transfer(amount);
     }
 }
