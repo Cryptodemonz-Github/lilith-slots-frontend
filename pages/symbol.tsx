@@ -1,6 +1,7 @@
 import React from "react";
 import { Box } from "grommet";
 import Image from "next/image";
+import img from "../styles/assets/1.png";
 
 type Props = {
   symbol: string;
@@ -17,18 +18,18 @@ class Symbol extends React.Component<Props> {
   render() {
     return (
       <>
-        <Box
-          height={String(this.props.height) + "px"}
-          width={String(this.props.width) + "px"}
-          flex={false}
-        >
-          <Image
-            src={
-              this.props.symbol &&
-              require("../styles/assets/" + this.props.symbol + ".png").default
-            }
-          />
-        </Box>
+        <div style={{ position: "relative" }}>
+          <div style={{ height: "195px", width: "195px" }}>
+            <Image
+              src={
+                this.props.symbol &&
+                require("../styles/assets/" + this.props.symbol + ".png")
+                  .default
+              }
+              layout="responsive"
+            />
+          </div>
+        </div>
       </>
     );
   }

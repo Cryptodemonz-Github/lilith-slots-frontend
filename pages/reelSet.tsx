@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Grid } from "grommet";
+import { Box, Grid, Stack } from "grommet";
 import Reel from "./reel";
 import ControlPanel from "./controlPanel";
 import Constants from "../constants/constants";
@@ -139,31 +139,21 @@ class ReelSet extends React.Component<Props, State> {
     return (
       <>
         {this.state.resetting}
-        <Box direction="row" background="#fff" flex={false}>
-          <Grid
-            fill={true}
-            width="700px"
-            rows={[String(this.reelSetHeight) + "px"]}
-            columns={["auto", "auto", "auto"]}
-            gap="small"
-            pad="small"
-            areas={[
-              { name: "left", start: [0, 0], end: [0, 0] },
-              { name: "center", start: [1, 0], end: [1, 0] },
-              { name: "right", start: [2, 0], end: [2, 0] },
-            ]}
-          >
-            {this.renderReels()}
-          </Grid>
-        </Box>
-        <ControlPanel
-          spin={this.spin}
-          reels={this.reels}
-          spinningIsEnded={this.state.spinningIsEnded}
-          setSpinningIsEnded={this.setSpinningIsEnded}
-          resetReels={this.resetReels}
-          setResetting={this.setResetting}
-        />
+
+        <Grid
+          alignSelf="center"
+          fill={true}
+          width="95%"
+          rows={["100vh"]}
+          columns={["auto", "auto", "auto"]}
+          areas={[
+            { name: "left", start: [0, 0], end: [0, 0] },
+            { name: "center", start: [1, 0], end: [1, 0] },
+            { name: "right", start: [2, 0], end: [2, 0] },
+          ]}
+        >
+          {this.renderReels()}
+        </Grid>
       </>
     );
   }

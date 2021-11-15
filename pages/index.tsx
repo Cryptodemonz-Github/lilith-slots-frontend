@@ -1,24 +1,97 @@
-import Head from "next/head";
-import styles from "../styles/Home.module.css";
-import { Heading } from "grommet";
-import { Grommet } from "grommet";
+import { Grommet, Grid, ResponsiveContext, Box, Stack } from "grommet";
 import { deepMerge } from "grommet/utils";
 import { grommet } from "grommet/themes";
 import ReelSet from "./reelSet";
 import React from "react";
 import customTheme from "../constants/style";
+import Image from "next/image";
+import machinePull from "../styles/assets/machine_pull.gif";
+import machineStill from "../styles/assets/machine_still.gif";
 
 interface Props {}
 
-class Home extends React.Component<Props> {
+interface State {
+  clicked: boolean;
+}
+
+class Home extends React.Component<Props, State> {
   public reelSet: ReelSet | null;
 
   constructor(props: Props) {
     super(props);
     this.reelSet = null;
+    this.state = { clicked: false };
   }
 
+  setClicked = (value: boolean) => {
+    this.setState({ clicked: value });
+  };
+
   render() {
+    return (
+      <Grommet
+        theme={deepMerge(grommet, customTheme)}
+        background={{ repeat: "no-repeat", image: "url('slotsBG.png')" }}
+      >
+        <ResponsiveContext.Consumer>
+          {(size: any) => (
+            <>
+              <Grid
+                fill={true}
+                rows={["auto", "auto", "auto"]}
+                columns={["10%", "auto", "10%"]}
+                areas={[
+                  { name: "left", start: [0, 0], end: [0, 0] },
+                  { name: "center", start: [1, 1], end: [1, 1] },
+                  { name: "right", start: [2, 2], end: [2, 2] },
+                ]}
+              >
+                <Box gridArea="left" />
+                <Stack>
+                  <div
+                    style={{
+                      position: "relative",
+                      width: "100%",
+                      height: "100%",
+                    }}
+                  >
+                    <ReelSet />
+                    {this.state.clicked ? (
+                      <Image
+                        src={machinePull}
+                        layout="fill"
+                        objectFit="cover"
+                      />
+                    ) : (
+                      <div style={{ cursor: "grab" }}>
+                        <Image
+                          src={machineStill}
+                          layout="fill"
+                          objectFit="cover"
+                          onClick={() => this.setClicked(true)}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </Stack>
+                <Box gridArea="right" />
+              </Grid>
+            </>
+          )}
+        </ResponsiveContext.Consumer>
+      </Grommet>
+    );
+
+    /*//<ReelSet />
+    <Box
+                    fill={true}
+                    direction="column"
+                    align="center"
+                    justify="center"
+                    alignSelf="center"
+                    gridArea="center"
+                    background={{ image: "url(machine_pull.gif)" }}
+                  ></Box>
     return (
       <Grommet
         theme={deepMerge(grommet, customTheme)}
@@ -35,12 +108,8 @@ class Home extends React.Component<Props> {
 
           <main className={styles.main}>
             <Heading>DEMONZ SLOTS</Heading>
-
-            <div className={styles.grid}>
-              <ReelSet />
-            </div>
           </main>
-
+          <ReelSet />
           <footer className={styles.footer}>
             <a
               href="https://cryptodemonz.com/"
@@ -52,7 +121,7 @@ class Home extends React.Component<Props> {
           </footer>
         </div>
       </Grommet>
-    );
+    );*/
   }
 }
 

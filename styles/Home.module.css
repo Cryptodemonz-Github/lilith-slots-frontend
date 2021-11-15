@@ -55,25 +55,4 @@
 
 
 }
-.marker {
-  position: absolute;
-  width: 60px;
-  left: 172px;
-  top: -20px;
-  z-index: 2;
-}
-
-.wheel {
-  width: auto;
-  height: auto;
-  align-self: center;
-  justify-self: center;
-  margin: 0 auto;
-  position: relative;
-
-}
-
-.wheelImg {
-  max-width: 500px;
-  height: auto;
-}
+ 

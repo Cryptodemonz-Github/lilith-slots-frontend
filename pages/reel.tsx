@@ -81,10 +81,11 @@ class Reel extends React.Component<Props, States> {
         <Box
           overflow="hidden"
           gridArea={this.props.area}
-          background="#fff"
+          background="#000"
           align="center"
           justify="center"
           flex={false}
+          margin={{ top: "160px" }}
         >
           <Spring
             from={{ y: this.state.startPos }}
